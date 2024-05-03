@@ -1,16 +1,30 @@
 package qtriptest;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.testng.annotations.DataProvider;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+
 public class DP {
     // TODO: use correct annotation to connect the Data Provider with your Test Cases
-    
+    @DataProvider(name = "test")
     public Object[][] dpMethod(Method m) throws IOException {
         int rowIndex = 0;
         int cellIndex = 0;
         List<List> outputList = new ArrayList<List>();
 
         FileInputStream excelFile = new FileInputStream(new File(
-                "<absolute-path-to-xlsx-file>"));
+                "/home/crio-user/workspace/saurabhkumar993973-ME_QTRIP_QA_V2/app/src/test/resources/DatasetsforQTrip.xlsx"));
+                
         Workbook workbook = new XSSFWorkbook(excelFile);
         Sheet selectedSheet = workbook.getSheet(m.getName());
         Iterator<Row> iterator = selectedSheet.iterator();
@@ -38,7 +52,8 @@ public class DP {
 
         excelFile.close();
 
-        String[][] stringArray = outputList.stream().map(u -> u.toArray(new String[0])).toArray(String[][]::new);
+        String[][] stringArray =
+                outputList.stream().map(u -> u.toArray(new String[0])).toArray(String[][]::new);
         return stringArray;
 
     }
