@@ -1,6 +1,7 @@
 package qtriptest.tests;
 
 import qtriptest.DP;
+import qtriptest.DriverSingleton;
 import qtriptest.pages.HomePage;
 import qtriptest.pages.LoginPage;
 import qtriptest.pages.RegisterPage;
@@ -16,15 +17,19 @@ import org.testng.annotations.Test;
 public class testCase_01 {
     static RemoteWebDriver driver;
 
-    @BeforeTest
+     @BeforeTest
     public static void createDriver() throws MalformedURLException {
-        final DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setBrowserName(BrowserType.CHROME);
-        driver = new RemoteWebDriver(new URL("http://localhost:8082/wd/hub"), capabilities);
-        driver.manage().window().maximize();
+        // final DesiredCapabilities capabilities = new DesiredCapabilities();
+        // capabilities.setBrowserName(BrowserType.CHROME);
+        // driver = new RemoteWebDriver(new URL("http://localhost:8082/wd/hub"), capabilities);
+        // driver.manage().window().maximize();
+
+        DriverSingleton driverSingleton = DriverSingleton.getInstanceOfSingletonBrowserClass();
+        driver = driverSingleton.getDriver();
     }
 
-    @Test(description = "Verify user registration -login -logout",dataProvider = "test",dataProviderClass = DP.class)
+    @Test(description = "Verify user registration -login -logout", dataProvider = "test",
+            dataProviderClass = DP.class, priority = 1, groups = "Login Flow")
     public static void TestCase01(String userName, String password) throws InterruptedException {
         HomePage homePage = new HomePage(driver);
         RegisterPage registerPage = new RegisterPage(driver);
@@ -51,7 +56,7 @@ public class testCase_01 {
 
         loginPage.navigateToLoginPage();
         status = loginPage.isLoginPageDisplayed();
-        
+
         if (status) {
             System.out.println("Successfullt navigated to Login page");
         } else {

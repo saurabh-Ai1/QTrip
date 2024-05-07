@@ -14,82 +14,86 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class HomePage {
     RemoteWebDriver driver;
 
-    
-    @FindBy(xpath="//div[text()='Logout']")
+
+    @FindBy(xpath = "//div[text()='Logout']")
     WebElement logoutButton;
 
-    @FindBy(xpath="//a[text()='Register']")
+    @FindBy(xpath = "//a[text()='Register']")
     WebElement registerButton;
 
-    @FindBy(id="autocomplete")
+    @FindBy(id = "autocomplete")
     WebElement searchBox;
 
     @FindBy(xpath = "//h5[text()='No City found']")
     WebElement noCityfound;
 
-    public HomePage(RemoteWebDriver driver){
-        this.driver=driver;
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+    public HomePage(RemoteWebDriver driver) {
+        this.driver = driver;
+        // driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, 40), this);
 
     }
 
-    public void gotoHomePage() throws InterruptedException{
+    public void gotoHomePage() throws InterruptedException {
         driver.navigate().to("https://qtripdynamic-qa-frontend.vercel.app/");
         Thread.sleep(2000);
     }
 
-    public void clickRegister() throws InterruptedException{
+    public void clickRegister() throws InterruptedException {
         registerButton.click();
 
     }
 
     public boolean isUserLoggedIn() throws InterruptedException {
-       // Thread.sleep(10000);
+        // Thread.sleep(10000);
         // WebDriverWait wait = new WebDriverWait(driver, 10);
         // wait.until(
-        //         ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[text()='Logout']")));
+        // ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[text()='Logout']")));
         try {
 
             if (logoutButton.isDisplayed()) {
                 return true;
-    
-            }
-            else {
+
+            } else {
 
                 return false;
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
 
             return false;
         }
 
     }
 
-    public void logOutUser() throws InterruptedException{
+    public void logOutUser() throws InterruptedException {
         logoutButton.click();
     }
 
-    public void searchCity(String cityName){
+    public void searchCity(String cityName) {
+        searchBox.clear();
         searchBox.sendKeys(cityName);
     }
 
-    public void selectCity(String cityName) throws InterruptedException{
+    public void selectCity(String cityName) throws InterruptedException {
         Thread.sleep(2000);
-        By by=new By.ByXPath(String.format("//li[@id='%s']",cityName.toLowerCase()));
+        By by = new By.ByXPath(String.format("//li[@id='%s']", cityName.toLowerCase()));
+        driver.findElement(by).click();
     }
 
-    public boolean isNoCityFound(){
+    public boolean isNoCityFound() {
         try {
             return noCityfound.isDisplayed();
         } catch (Exception e) {
             return false;
-            //TODO: handle exception
+            // TODO: handle exception
         }
     }
 
-
-
+    public void history() throws InterruptedException {
+        
+        WebElement historyLink = driver.findElement(By.xpath("//*[@id='navbarNavDropdown']/ul/li[2]/a"));
+        Thread.sleep(3000);
+        historyLink.click();
+    }
 
 }

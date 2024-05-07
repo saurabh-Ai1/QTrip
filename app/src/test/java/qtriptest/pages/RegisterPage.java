@@ -11,39 +11,40 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 public class RegisterPage {
     RemoteWebDriver driver;
     public String lastGeneratedUsername;
-    public String url="https://qtripdynamic-qa-frontend.vercel.app/pages/register/";
+    public String url = "https://qtripdynamic-qa-frontend.vercel.app/pages/register/";
 
-    @FindBy(id="floatingInput")
+    @FindBy(id = "floatingInput")
     WebElement emailTextBox;
 
-    @FindBy(id="floatingPassword")
+    @FindBy(id = "floatingPassword")
     WebElement passwordTextBox;
 
-    @FindBy(xpath="//input[@placeholder='Retype Password to Confirm']")
+    @FindBy(xpath = "//input[@placeholder='Retype Password to Confirm']")
     WebElement confirmpasswordTextBox;
 
-    @FindBy(xpath="//button[text()='Register Now']")
+    @FindBy(xpath = "//button[text()='Register Now']")
     WebElement registerNowButton;
 
-    public RegisterPage(RemoteWebDriver driver){
-        this.driver=driver;
-       // driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
-        PageFactory.initElements(new AjaxElementLocatorFactory(driver,40),this);
+    public RegisterPage(RemoteWebDriver driver) {
+        this.driver = driver;
+        // driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
+        PageFactory.initElements(new AjaxElementLocatorFactory(driver, 40), this);
     }
 
-    public void registerNewUser(String userName,String password,String confirmPassword,Boolean makeDynamic) throws InterruptedException{
+    public void registerNewUser(String userName, String password, String confirmPassword,
+            Boolean makeDynamic) throws InterruptedException {
         // if(makeDynamic){
-        //     userName=userName+UUID.randomUUID().toString()+"@gmail.com";
-        //     this.lastGeneratedUsername=userName;
+        // userName=userName+UUID.randomUUID().toString()+"@gmail.com";
+        // this.lastGeneratedUsername=userName;
         // }
         // String testUserName;
         System.out.println(userName);
 
-        if(makeDynamic){
+        if (makeDynamic) {
             // testUserName=userName.split("@")[0];
-            userName=UUID.randomUUID().toString()+userName;
+            userName = UUID.randomUUID().toString() + userName;
             System.out.println(userName);
-          //  this.lastGeneratedUsername=testUserName;
+            // this.lastGeneratedUsername=testUserName;
             // this.lastGeneratedUsername=userName;
 
         }
@@ -51,26 +52,27 @@ public class RegisterPage {
         // testUserName = userName + UUID.randomUUID().toString();
         // else
         // testUserName = userName;
-        this.lastGeneratedUsername=userName;
-        
+        this.lastGeneratedUsername = userName;
+
         emailTextBox.sendKeys(userName);
         passwordTextBox.sendKeys(password);
-        Thread.sleep(2000);
+        // Thread.sleep(2000);
         confirmpasswordTextBox.sendKeys(confirmPassword);
-        System.out.println(lastGeneratedUsername);
-        Thread.sleep(1000);
+        // System.out.println(lastGeneratedUsername);
+        // Thread.sleep(1000);
         try {
             registerNowButton.click();
+            Thread.sleep(4000);
             System.out.println("click the register button");
         } catch (Exception e) {
             e.printStackTrace();
-            //TODO: handle exception
+            // TODO: handle exception
         }
 
     }
 
-    public boolean validateRegisterPage(){
-        if(driver.getCurrentUrl().equalsIgnoreCase(url)){
+    public boolean validateRegisterPage() {
+        if (driver.getCurrentUrl().equalsIgnoreCase(url)) {
             return true;
         }
         return false;

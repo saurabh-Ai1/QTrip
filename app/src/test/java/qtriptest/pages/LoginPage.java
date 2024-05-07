@@ -30,16 +30,17 @@ public class LoginPage {
 
     public LoginPage(RemoteWebDriver driver) {
         this.driver = driver;
-        //driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        // driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, 40), this);
     }
 
     public void performLogin(String username, String password) {
-        System.out.println(username);
+        // System.out.println(username);
         emailTextBox.sendKeys(username);
         passwordTextBox.sendKeys(password);
         try {
             loginButton.click();
+            Thread.sleep(4000);
         } catch (Exception e) {
             e.printStackTrace();
             // TODO: handle exception
