@@ -50,7 +50,7 @@ public class AdventurePage {
     }
 
     public int getResultCount() {
-        List<WebElement> resultGrid = this.driver.findElements(By.xpath("//div[@id='data']"));
+        List<WebElement> resultGrid = this.driver.findElements(By.xpath("//div[@class='activity-card']"));
         return resultGrid.size();
     }
 

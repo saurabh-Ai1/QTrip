@@ -1,5 +1,6 @@
 package qtriptest.pages;
 
+import qtriptest.SeleniumWrapper;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -35,12 +36,14 @@ public class HomePage {
     }
 
     public void gotoHomePage() throws InterruptedException {
-        driver.navigate().to("https://qtripdynamic-qa-frontend.vercel.app/");
+      //  driver.navigate().to("https://qtripdynamic-qa-frontend.vercel.app/");
+      SeleniumWrapper.navigate(this.driver, "https://qtripdynamic-qa-frontend.vercel.app/");
         Thread.sleep(2000);
     }
 
     public void clickRegister() throws InterruptedException {
-        registerButton.click();
+     //   registerButton.click();
+     SeleniumWrapper.click(registerButton, this.driver);
 
     }
 
@@ -66,7 +69,8 @@ public class HomePage {
     }
 
     public void logOutUser() throws InterruptedException {
-        logoutButton.click();
+      //  logoutButton.click();
+      SeleniumWrapper.click(logoutButton, this.driver);
     }
 
     public void searchCity(String cityName) {

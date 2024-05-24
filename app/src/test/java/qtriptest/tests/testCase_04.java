@@ -7,19 +7,31 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
 import org.apache.logging.log4j.core.util.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.*;
-
+// import org.junit.Assert;
 public class testCase_04 {
     public static RemoteWebDriver driver;
+
+    static ExtentTest test;
+    static ExtentReports report;
 
     @BeforeTest(alwaysRun = true)
     public void createDriver() throws MalformedURLException {
         DriverSingleton driverSingleton = DriverSingleton.getInstanceOfSingletonBrowserClass();
         driver = driverSingleton.getDriver();
+
+
+        report = new ExtentReports(System.getProperty("user.dir") + "/OurExtentReport.html");
+
+        test = report.startTest("QTrip Booking History");
+
     }
 
     @Test(description = "Verify that booking history can be viewed", dataProvider = "test",
@@ -37,7 +49,7 @@ public class testCase_04 {
 
         homePage.gotoHomePage();
         homePage.clickRegister();
-        registerPage.registerNewUser(userName, password,password, true);
+        registerPage.registerNewUser(userName, password, password, true);
         loginPage.performLogin(registerPage.lastGeneratedUsername, password);
 
         String str1[] = dataset1.split(";");
@@ -95,13 +107,25 @@ public class testCase_04 {
         Thread.sleep(2000);
 
 
-        List<WebElement> allBookings =
-                driver.findElements(By.xpath("//tbody[@id='reservation-table']/tr/th"));
-        System.out.println("The number of rows in the table is " + allBookings.size());
-        if (allBookings.size() == 3) {
-            System.out.println("All bookings are displayed Successfully.!");
+        // List<WebElement> allBookings =
+        //         driver.findElements(By.xpath("//tbody[@id='reservation-table']/tr/th"));
+        // System.out.println("The number of rows in the table is " + allBookings.size());
+        // if (allBookings.size() == 3) {
+        //     System.out.println("All bookings are displayed Successfully.!");
+        // } else {
+        //     System.out.println("Failed to display all bookings");
+        // }
+
+        // Validate the number of bookings
+
+        List<WebElement> allBookings = driver.findElements(By.xpath("//tbody[@id='reservation-table']/tr/th"));
+        int bookingCount = allBookings.size();
+        test.log(LogStatus.INFO, "The number of rows in the booking table is " + bookingCount);
+
+        if (bookingCount == 3) {
+            test.log(LogStatus.PASS, "All bookings are displayed successfully");
         } else {
-            System.out.println("Failed to display all bookings");
+            test.log(LogStatus.FAIL, "Failed to display all bookings: Expected 3 but found " + bookingCount);
         }
         Thread.sleep(2000);
 
@@ -111,7 +135,10 @@ public class testCase_04 {
     @AfterTest
     public void quitDriver() {
         driver.quit();
+        
         System.out.println("driver quit()");
+        report.endTest(test);
+        report.flush();
     }
 }
 

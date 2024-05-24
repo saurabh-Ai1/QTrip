@@ -7,9 +7,13 @@ import qtriptest.pages.LoginPage;
 import qtriptest.pages.RegisterPage;
 import java.net.MalformedURLException;
 import java.net.URL;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -17,7 +21,10 @@ import org.testng.annotations.Test;
 public class testCase_01 {
     static RemoteWebDriver driver;
 
-     @BeforeTest
+    static ExtentTest test;
+    static ExtentReports report;
+
+    @BeforeTest
     public static void createDriver() throws MalformedURLException {
         // final DesiredCapabilities capabilities = new DesiredCapabilities();
         // capabilities.setBrowserName(BrowserType.CHROME);
@@ -26,6 +33,11 @@ public class testCase_01 {
 
         DriverSingleton driverSingleton = DriverSingleton.getInstanceOfSingletonBrowserClass();
         driver = driverSingleton.getDriver();
+
+
+        report = new ExtentReports(System.getProperty("user.dir") + "/OurExtentReport.html");
+
+        test = report.startTest("QTrip Registration-Login");
     }
 
     @Test(description = "Verify user registration -login -logout", dataProvider = "test",
@@ -67,10 +79,16 @@ public class testCase_01 {
         loginPage.performLogin(registerPage.lastGeneratedUsername, password);
         Thread.sleep(5000);
         // Verify that user is logged in
+        // if (homePage.isUserLoggedIn()) {
+        // System.out.println("User logged in successfully");
+        // } else {
+        // System.out.println("Failed to Login");
+        // }
+        Assert.assertTrue(homePage.isUserLoggedIn());
         if (homePage.isUserLoggedIn()) {
-            System.out.println("User logged in successfully");
+            test.log(LogStatus.PASS, "SUccessFullyLogin with the register User");
         } else {
-            System.out.println("Failed to Login");
+            test.log(LogStatus.FAIL, "Failure to login using register user");
         }
 
         // Click on the logout Button
@@ -78,16 +96,26 @@ public class testCase_01 {
         Thread.sleep(5000);
 
         // Verify that user is logged out
+        // if (!homePage.isUserLoggedIn()) {
+        // System.out.println("User is logged out successfully");
+        // } else {
+        // System.out.println("Failed-User is not logged out");
+        // }
+
+        Assert.assertFalse(homePage.isUserLoggedIn());
         if (!homePage.isUserLoggedIn()) {
-            System.out.println("User is logged out successfully");
+            test.log(LogStatus.PASS, "Successfully verified that user is loggedOUT ");
         } else {
-            System.out.println("Failed-User is not logged out");
+            test.log(LogStatus.FAIL, "Failure to loggedout");
         }
+
     }
 
     @AfterSuite
     public static void quitDriver() {
         driver.quit();
+        report.endTest(test);
+        report.flush();
     }
 
 
